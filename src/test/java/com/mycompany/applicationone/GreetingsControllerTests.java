@@ -31,7 +31,7 @@ class GreetingsControllerTests {
         when(values.increment("hits")).thenReturn(42L);
         mvc.perform(get("/")).andExpect(status().isOk())
             .andExpect(header().string("Cache-Control", "no-store"))
-            .andExpect(content().string(containsString("vue 42 fois")))
+            .andExpect(content().string(containsString("Bonjour ! Cette page a été vue 42 fois.")))
             .andExpect(content().string(containsString("test-container")));
         verify(values, times(1)).increment("hits");
     }

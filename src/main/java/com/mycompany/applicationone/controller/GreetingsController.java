@@ -50,9 +50,9 @@ public class GreetingsController {
             </style></head><body><main><small>TP1 GRP1 / LABORATOIRE DEVOPS</small>
             <h1>Visit-Counter</h1><p>Spring Boot + Redis + Docker Compose</p>
             <div class="count">%d</div>
-            <p>Bonjour ! Cette page a ?t? vue %d fois. Je suis le conteneur <code>%s</code>.</p>
+            <p>Bonjour ! Cette page a été vue %d fois. Je suis le conteneur <code>%s</code>.</p>
             <a href="/">Nouvelle visite</a>
-            <footer>Ali Dridi ? Rayenne Abid ? Aymen Chahed ? Bochra Karoui</footer>
+            <footer>Ali Dridi · Rayenne Abid · Aymen Chahed · Bochra Karoui</footer>
             </main></body></html>
             """.formatted(hits, hits, HtmlUtils.htmlEscape(containerId));
         return ResponseEntity.ok().header("Cache-Control", "no-store")
@@ -75,6 +75,6 @@ public class GreetingsController {
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<String> redisUnavailable(DataAccessException error) {
         return ResponseEntity.status(503).header("Retry-After", "3")
-            .body("Redis est temporairement indisponible. R?essayez dans quelques secondes.");
+            .body("Redis est temporairement indisponible. Réessayez dans quelques secondes.");
     }
 }
