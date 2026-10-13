@@ -1,0 +1,63 @@
+services:
+  db-service:
+    image: redis:7.4-alpine
+    container_name: db-service
+    command: ["redis-server", "--port", "${REDIS_PORT}",
+              "--appendonly", "yes", "--appendfsync", "always"]
+    volumes:
+      - redis-data:/data
+    networks: [app-network]
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "${REDIS_PORT}", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  web:
+    build: .
+    image: ${APP_IMAGE}
+    environment:
+      APP_PORT: ${APP_PORT}
+      REDIS_HOST: db-service
+      REDIS_PORT: ${REDIS_PORT}
+    expose: ["${APP_PORT}"]
+    depends_on:
+      db-service:
+        condition: service_healthy
+    networks: [app-network]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:$$APP_PORT/health"]
+      interval: 5s
+      timeout: 4s
+      retries: 15
+      start_period: 30s
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 384m
+    restart: unless-stopped
+
+  proxy:
+    image: nginx:1.28-alpine
+    ports: ["${HOST_PORT}:${PROXY_PORT}"]
+    environment:
+      APP_PORT: ${APP_PORT}
+      PROXY_PORT: ${PROXY_PORT}
+    volumes:
+      - ./nginx/default.conf.template:/etc/nginx/templates/default.conf.template:ro
+    depends_on:
+      web:
+        condition: service_healthy
+    networks: [app-network]
+    restart: unless-stopped
+
+networks:
+  app-network:
+    name: app-network
+    driver: bridge
+
+volumes:
+  redis-data:
+    name: redis-data

@@ -1,0 +1,16 @@
+.git
+.github
+.mvn
+mvnw*
+target
+evidence
+report
+output
+*.zip
+*.pdf
+.env*
+README.md
+notes.txt
+Jenkinsfile
+scripts
+__pycache__
