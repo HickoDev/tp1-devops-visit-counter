@@ -102,9 +102,8 @@ ne sont pas des captures du terminal Windows. Les journaux restent vérifiables.
 
 ## Publication Docker Hub
 
-Compte prévu : `hickodev100`. Le compte et la connexion doivent être validés
-avant ces commandes. Le succès d'un push doit être vérifié avant d'annoncer
-que l'image est publique.
+Compte : `hickodev100`. Le tag `1.0` a été publié et récupéré sans authentification
+le 13 octobre 2026 ; le dépôt Docker Hub est public.
 
 ```powershell
 docker tag counter-app:1.0 hickodev100/counter-app:1.0
@@ -128,6 +127,9 @@ Docker Hub avec droit d'écriture). Ils se configurent dans Settings > Secrets
 and variables > Actions. Aucun secret ne doit être ajouté dans `.env` ou Git.
 Un job de publication échoué pour secret absent ne signifie pas un pipeline
 complet réussi : consulter le lien de l'exécution dans le rapport.
+
+Exécution complète vérifiée (build, tests, image et publication réussis) :
+https://github.com/HickoDev/tp1-devops-visit-counter/actions/runs/38373317164
 
 Un [Jenkinsfile](Jenkinsfile) équivalent est fourni si Jenkins est demandé.
 Créer un projet Pipeline depuis SCM, avec un agent Linux disposant de Docker,

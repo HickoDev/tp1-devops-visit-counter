@@ -9,20 +9,21 @@ const escape = text => text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').rep
 
 (async () => {
   const browser = await chromium.launch({headless: true});
-  const context = await browser.newContext({viewport: {width: 1360, height: 900}, deviceScaleFactor: 1});
+  const context = await browser.newContext({viewport: {width: 1100, height: 760}, deviceScaleFactor: 1});
   await context.route('**/*', route => {
     const host = new URL(route.request().url()).hostname;
     return host === 'localhost' || host === '127.0.0.1' ? route.continue() : route.abort();
   });
   const page = await context.newPage();
   await page.goto('http://localhost/', {waitUntil: 'networkidle'});
-  await page.screenshot({path: path.join(ev, 'app-first.png'), fullPage: true});
+  await page.locator('main').screenshot({path: path.join(ev, 'app-first.png')});
   await page.getByRole('link', {name: 'Nouvelle visite'}).click();
   await page.waitForLoadState('networkidle');
-  await page.screenshot({path: path.join(ev, 'app-next.png'), fullPage: true});
+  await page.locator('main').screenshot({path: path.join(ev, 'app-next.png')});
   await page.setViewportSize({width: 1100, height: 120});
   for (const [file, title] of [
     ['02-images', 'Taille de l’image Docker'],
+    ['network-manual', 'Inspection du réseau : déploiement manuel'],
     ['23-network-summary', 'Réseau app-network : conteneurs connectés'],
     ['14-persistence', 'Suppression de Redis : vérification de la persistance'],
     ['19-compose-ps', 'Docker Compose : trois instances web'],
